@@ -1,0 +1,171 @@
+//E-Waste Recycling Tracker
+
+
+#include <iostream>
+using namespace std;
+
+// ---------------- Base Class ----------------
+class ElectronicItem
+{
+protected:
+    string itemName;
+    float weight;
+    string originCity;
+
+public:
+    // Default Constructor
+    ElectronicItem()
+    {
+        itemName = "";
+        weight = 0.0;
+        originCity = "";
+    }
+
+    void inputItem()
+    {
+        cout << "Enter Item Name: ";
+        cin >> itemName;
+
+        cout << "Enter Weight (kg): ";
+        cin >> weight;
+
+        cout << "Enter Origin City: ";
+        cin >> originCity;
+    }
+
+    void displayItem() const
+    {
+        cout << "Item Name   : " << itemName << endl;
+        cout << "Weight      : " << weight << " kg" << endl;
+        cout << "Origin City : " << originCity << endl;
+    }
+};
+
+// ---------------- Derived Class: HomeAppliance ----------------
+class HomeAppliance : public ElectronicItem
+{
+private:
+    int powerRating;
+    float recyclablePlasticPercent;
+
+public:
+    // Default Constructor
+    HomeAppliance()
+    {
+        powerRating = 0;
+        recyclablePlasticPercent = 0.0;
+    }
+
+    void inputHomeAppliance()
+    {
+        inputItem();
+        cout << "Enter Power Rating (Watts): ";
+        cin >> powerRating;
+
+        cout << "Enter Recyclable Plastic %: ";
+        cin >> recyclablePlasticPercent;
+    }
+
+    void displayHomeAppliance() const
+    {
+        displayItem();
+        cout << "Power Rating            : " << powerRating << " W" << endl;
+        cout << "Recyclable Plastic (%)  : " << recyclablePlasticPercent << endl;
+        cout << "----------------------------------" << endl;
+    }
+
+    bool isHighlyRecyclable() const
+    {
+        return recyclablePlasticPercent > 70;
+    }
+};
+
+// ---------------- Derived Class: MobileDevice ----------------
+class MobileDevice : public ElectronicItem
+{
+private:
+    int batteryCapacity;
+    bool hasScreenCrack;
+
+public:
+    // Default Constructor
+    MobileDevice()
+    {
+        batteryCapacity = 0;
+        hasScreenCrack = false;
+    }
+
+    void inputMobileDevice()
+    {
+        inputItem();
+        cout << "Enter Battery Capacity (mAh): ";
+        cin >> batteryCapacity;
+
+        cout << "Has Screen Crack? (1-Yes / 0-No): ";
+        cin >> hasScreenCrack;
+    }
+
+    void displayMobileDevice() const
+    {
+        displayItem();
+        cout << "Battery Capacity : " << batteryCapacity << " mAh" << endl;
+        cout << "Screen Crack     : " << (hasScreenCrack ? "Yes" : "No") << endl;
+        cout << "----------------------------------" << endl;
+    }
+
+    bool isHighBattery() const
+    {
+        return batteryCapacity > 3000;
+    }
+};
+
+// ---------------- Main Function ----------------
+int main()
+{
+    const int HOME_COUNT = 2;
+    const int MOBILE_COUNT = 3;
+
+    HomeAppliance homeItems[HOME_COUNT];
+    MobileDevice mobileItems[MOBILE_COUNT];
+
+    cout << "\n--- Enter Home Appliance Details ---\n";
+    for (int i = 0; i < HOME_COUNT; i++)
+    {
+        cout << "\nHome Appliance " << i + 1 << endl;
+        homeItems[i].inputHomeAppliance();
+    }
+
+    cout << "\n--- Enter Mobile Device Details ---\n";
+    for (int i = 0; i < MOBILE_COUNT; i++)
+    {
+        cout << "\nMobile Device " << i + 1 << endl;
+        mobileItems[i].inputMobileDevice();
+    }
+
+    cout << "\n--- All Home Appliances ---\n";
+    for (int i = 0; i < HOME_COUNT; i++)
+        homeItems[i].displayHomeAppliance();
+
+    cout << "\n--- All Mobile Devices ---\n";
+    for (int i = 0; i < MOBILE_COUNT; i++)
+        mobileItems[i].displayMobileDevice();
+
+    cout << "\n--- Mobile Devices with Battery > 3000 mAh ---\n";
+    for (int i = 0; i < MOBILE_COUNT; i++)
+    {
+        if (mobileItems[i].isHighBattery())
+            mobileItems[i].displayMobileDevice();
+    }
+
+    int count = 0;
+    for (int i = 0; i < HOME_COUNT; i++)
+    {
+        if (homeItems[i].isHighlyRecyclable())
+            count++;
+    }
+
+    cout << "\nTotal Home Appliances with >70% Recyclable Plastic: "
+         << count << endl;
+
+    return 0;
+}
